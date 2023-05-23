@@ -1,0 +1,65 @@
+# This "input" configures a global authorization rule to enable public access to
+# all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
+input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONLY!
+
+type Note @model {
+  id: ID!
+  name: String!
+  content: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  user: User @belongsTo(fields: "userID")
+  userID: ID! @index(name: "byUser", sortKeyFields: ["content"])
+  publicity: Publicity!
+  relfrom: [Relation!]! @hasMany
+  relto: [Relation!]! @hasMany
+}
+
+type Relation @model {
+  from: Note! @belongsTo
+  to: Note! @belongsTo
+  rel: Rel! @belongsTo
+}
+
+
+# type Note @model {
+#   id: ID!
+#   name: String!
+#   content: String
+#   createdAt: AWSDateTime!
+#   updatedAt: AWSDateTime!
+#   user: User  @belongsTo(fields: "userID")
+#   userID: @index(name: "byUser", sortKeyFields: ["content"])
+#   publicity: Publicity!
+#   relate: [ForwardRel!] @manyToMany(relationName: "noterel")
+# }
+
+# type ForwardRel @model {
+#   id: ID!
+#   rel: Rel! @hasOne
+#   note: Note! @belongsTo
+#   notes: [Note!] @manyToMany(relationName: "noterel")
+# }
+
+
+
+type Rel @model {
+  id: ID!
+  name: String!
+  parentID: ID @index(name: "byRel", sortKeyFields: ["name"])
+  parent: Rel @belongsTo(fields: "parentID")
+  children: [Rel!]! @hasMany(indexName: "byRel", fields: ["id"])
+  relations: [Relation!]! @hasMany
+}
+
+type User @model {
+  id: ID!
+  name: String!
+  notes: [Note!]! @hasMany(indexName: "byUser", fields: ["id"])
+}
+
+
+enum Publicity {
+  public
+  private
+}

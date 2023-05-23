@@ -5,6 +5,7 @@ import awsconfig from "../aws-exports"
 // import Top from "./top"
 import PageMain from "./pagemain"
 import { AmplifyProvider, Authenticator, Button, Flex, Image, Text, View, withAuthenticator } from '@aws-amplify/ui-react'
+import Generated from "./generated"
 Amplify.configure({...awsconfig, ssr:true})
 
 function Home() {
@@ -14,6 +15,7 @@ function Home() {
         <h1>Home</h1>
         <PageMain/>
         {/* <Top/> */}
+        {/* <Generated/> */}
       </View>
       <Authenticator>
         {({signOut, user})=>(
